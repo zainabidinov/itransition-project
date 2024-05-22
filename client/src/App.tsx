@@ -1,7 +1,13 @@
+import { useTheme } from "next-themes";
+import { Routes, Route, Navigate } from "react-router-dom";
+import SignUp from "./pages/SignUp";
 function App() {
+
   return (
     <>
-      <h1>Hello World!</h1>
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
     </>
   );
 }
