@@ -1,21 +1,18 @@
 import React from "react";
 import { Button, Input } from "@nextui-org/react";
-import { EyeSlashFilledIcon } from "../components/EyeSlashFilledIcon";
-import { EyeFilledIcon } from "../components/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../components/icons/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../components/icons/EyeFilledIcon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
-
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+import { Link, useNavigate } from "react-router-dom";
+import { UserProfile } from "../types/types";
+import { signUp } from "../api/signUp";
+import { Toaster, toast } from "sonner";
 
 const SignUp: React.FC = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     firstName: Yup.string()
@@ -30,7 +27,7 @@ const SignUp: React.FC = () => {
     password: Yup.string().required("Password is required"),
   });
 
-  const formik = useFormik<FormValues>({
+  const formik = useFormik<UserProfile>({
     initialValues: {
       firstName: "",
       lastName: "",
@@ -38,13 +35,26 @@ const SignUp: React.FC = () => {
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form Values", values);
+    onSubmit: async (values) => {
+      try {
+        const response = await signUp(values);
+        if (response.success === false) {
+          toast.error(response.message);
+        }
+        if (response.success === true) {
+          localStorage.setItem('token', response.token);
+          navigate("/home");
+          formik.resetForm();
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 
   return (
     <div className='h-screen w-screen'>
+      <Toaster richColors position='top-right' />
       <div className='flex justify-center items-center h-full w-full'>
         <form
           onSubmit={formik.handleSubmit}
@@ -127,7 +137,7 @@ const SignUp: React.FC = () => {
                 {isVisible ? (
                   <EyeSlashFilledIcon className='text-2xl text-default-400 pointer-events-none mb-1.5' />
                 ) : (
-                  <EyeFilledIcon className='text-2xl text-default-400 pointer-events-none mb-1.5'/>
+                  <EyeFilledIcon className='text-2xl text-default-400 pointer-events-none mb-1.5' />
                 )}
               </button>
             }
@@ -137,11 +147,13 @@ const SignUp: React.FC = () => {
           </Button>
 
           <span className='text-center'>
-            Already have an account? <Link to='/login' className="hover:underline">Login</Link>
+            Already have an account?{" "}
+            <Link to='/login' className='hover:underline'>
+              Login
+            </Link>
           </span>
         </form>
       </div>
-      
     </div>
   );
 };

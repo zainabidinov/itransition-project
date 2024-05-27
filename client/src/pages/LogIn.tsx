@@ -1,19 +1,18 @@
 import React from "react";
 import { Button, Input } from "@nextui-org/react";
-import { EyeSlashFilledIcon } from "../components/EyeSlashFilledIcon";
-import { EyeFilledIcon } from "../components/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../components/icons/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../components/icons/EyeFilledIcon";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
-
-interface FormValues {
-  email: string;
-  password: string;
-}
+import { Link, useNavigate } from "react-router-dom";
+import { logIn } from "../api/logIn";
+import { toast, Toaster } from "sonner";
+import { UserProfile } from "../types/types";
 
 const LogIn: React.FC = () => {
   const [isVisible, setIsVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -22,19 +21,32 @@ const LogIn: React.FC = () => {
     password: Yup.string().required("Password is required"),
   });
 
-  const formik = useFormik<FormValues>({
+  const formik = useFormik<UserProfile>({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form Values", values);
+    onSubmit: async (values) => {
+      try {
+        const response = await logIn(values);
+        if (response.success === false) {
+          toast.error(response.message);
+        }
+        if (response.success === true) {
+          localStorage.setItem("token", response.token);
+          navigate("/home");
+          formik.resetForm();
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 
   return (
     <div className='h-screen w-screen'>
+      <Toaster richColors position='top-right' />
       <div className='flex justify-center items-center h-full w-full'>
         <form
           onSubmit={formik.handleSubmit}

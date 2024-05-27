@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.3.6",
+    "axios": "^1.7.2",
     "formik": "^2.4.6",
     "framer-motion": "^11.2.5",
     "next-themes": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
+    "sonner": "^1.4.41",
     "yup": "^1.4.0"
   },
   "devDependencies": {

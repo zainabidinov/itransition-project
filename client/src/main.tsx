@@ -8,7 +8,7 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
   <NextUIProvider>
-    <NextThemesProvider attribute='class' defaultTheme='dark'>
+    <NextThemesProvider attribute='class' defaultTheme='light'>
       <App />
     </NextThemesProvider>
   </NextUIProvider>
