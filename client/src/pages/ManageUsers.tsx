@@ -35,7 +35,6 @@ import { UnlockIcon } from "../components/icons/UnlockIcon";
 import { UserProfile } from "../types/types";
 import axiosInstance from "../api/axiosInstance";
 import { ArrowUpIcon } from "../components/icons/ArrowUpIcon";
-import { CloseIcon } from "../components/icons/CloseIcon";
 import { ArrowDownIcon } from "../components/icons/ArrowDownIcon";
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
@@ -56,7 +55,7 @@ const ManageUsers = () => {
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
   const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-  const [rowsPerPage, setRowsPerPage] = React.useState(8);
+  const [rowsPerPage] = React.useState(8);
   const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
     column: "age",
     direction: "ascending",

@@ -1,5 +1,3 @@
-import { JSX } from "react/jsx-runtime";
-
 export const CloseIcon = (
 ) => (
   <svg
