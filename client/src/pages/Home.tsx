@@ -11,10 +11,12 @@ const Home = () => {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await axiosInstance.get("/fetch-current-user");
-        if (response.data.success) {
-          setCurrentUser(response.data.user);
-          console.log(currentUser);
+        if (localStorage.getItem("token")) {
+          const response = await axiosInstance.get("/current-user");
+          if (response.data.success) {
+            setCurrentUser(response.data.user);
+            console.log(currentUser);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch current user", error);

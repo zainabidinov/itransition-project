@@ -15,6 +15,8 @@ import {
 import { SearchIcon } from "./icons/SearchIcon";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../store/userContext";
+import { useEffect } from "react";
+import axiosInstance from "../api/axiosInstance";
 
 const ExtendedNavbar: React.FC = () => {
   const { currentUser, setCurrentUser} = useUserContext();
@@ -25,6 +27,26 @@ const ExtendedNavbar: React.FC = () => {
     navigate("/login");
     setCurrentUser(null);
   };
+
+  
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        if (localStorage.getItem("token")) {
+          const response = await axiosInstance.get("/current-user");
+          if (response.data.success) {
+            setCurrentUser(response.data.user);
+            console.log(currentUser);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch current user", error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
 
   const renderNavbarItems = () => {
     if (currentUser && currentUser.isAdmin === false) {

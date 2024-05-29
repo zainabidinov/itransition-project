@@ -24,11 +24,9 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    const token = jwt.sign(
-      { id: newUser.id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     return res.status(201).send({
       token,
@@ -62,11 +60,9 @@ exports.login = async (req, res) => {
       });
     }
 
-    const token = jwt.sign(
-      { id: user.id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
     return res.status(200).send({
       token,
@@ -81,7 +77,14 @@ exports.login = async (req, res) => {
 exports.fetchCurrentUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'firstName', 'lastName', 'email', 'isAdmin']
+      attributes: [
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "isAdmin",
+        "isActive",
+      ],
     });
 
     if (!user) {
@@ -98,5 +101,168 @@ exports.fetchCurrentUser = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+exports.fetchAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: ["id", "firstName", "lastName", "email", "isAdmin", "isActive"],
+    });
+
+    return res.status(200).send({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error("Failed to fetch users", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.blockUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    user.isActive = false;
+    await user.save();
+
+    return res.status(200).send({
+      message: "User has been blocked.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Failed to block user", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.unblockUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    user.isActive = true;
+    await user.save();
+
+    return res.status(200).send({
+      message: "User has been unblocked.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Failed to unblock user", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.demoteUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    user.isAdmin = false;
+    await user.save();
+
+    return res.status(200).send({
+      message: "User has been demoted.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Failed to demote user", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.promoteUser = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    user.isAdmin = true;
+    await user.save();
+
+    return res.status(200).send({
+      message: "User has been promoted.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Failed to promote user", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    await user.destroy();
+
+    return res.status(200).send({
+      message: "User has been deleted.",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Failed to delete user", error);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };

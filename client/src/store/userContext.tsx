@@ -5,6 +5,8 @@ import { useTheme } from "next-themes";
 interface UserContextProps {
   currentUser: UserProfile | null;
   setCurrentUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+  users: UserProfile[] | null;
+  setUsers: React.Dispatch<React.SetStateAction<UserProfile[] | null>>;
   theme: string | undefined;
   setTheme: React.Dispatch<React.SetStateAction<string>>
 }
@@ -15,9 +17,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [users, setUsers] = useState<UserProfile[] | null>(null);
   const { theme, setTheme } = useTheme();
 
-  const value = { currentUser, setCurrentUser, theme, setTheme };
+  const value = { currentUser, setCurrentUser, users, setUsers, theme, setTheme };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
