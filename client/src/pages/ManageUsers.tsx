@@ -24,11 +24,8 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 
-// import { columns, users, statusOptions } from "../data/data";
-import { capitalize } from "../utils/capitalize";
-import React, { useEffect } from "react";
-import { SearchIcon } from "../components/icons/SearchIcon";
-import { ChevronDownIcon } from "../components/icons/ChevronDownIcon";
+
+import React, { useEffect, useRef } from "react";
 import { DeleteIcon } from "../components/icons/DeleteIcon";
 import { LockIcon } from "../components/icons/LockIcon";
 import { UnlockIcon } from "../components/icons/UnlockIcon";
@@ -61,6 +58,7 @@ const ManageUsers = () => {
     direction: "ascending",
   });
   const [page, setPage] = React.useState(1);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -74,6 +72,24 @@ const ManageUsers = () => {
 
     fetchUsers();
   }, []);
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        const response = await axiosInstance.post("/upload-image", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      } catch (error) {
+        console.error("Error uploading avatar", error);
+      }
+    }
+  };
 
   const columns = [
     { name: "NAME", uid: "name", sortable: true },
@@ -102,12 +118,7 @@ const ManageUsers = () => {
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers: UserProfile[] = users ? [...users] : [];
-
-    if (hasSearchFilter) {
-      // filteredUsers = filteredUsers.filter((user) =>
-      //   user.firstName.toLowerCase().includes(filterValue.toLowerCase())
-      // );
-    }
+    
     if (
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusOptions.length
@@ -120,7 +131,7 @@ const ManageUsers = () => {
     return filteredUsers;
   }, [users, filterValue, statusFilter]);
 
-  console.log(users);
+  (users);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -147,17 +158,33 @@ const ManageUsers = () => {
     switch (columnKey) {
       case "name":
         return (
-          <User
-            // avatarProps={{ radius: "full", size: "sm", src: user.avatar }}
-            classNames={{
-              description: "text-default-500",
-            }}
-            description={user.email}
-            name={`${user.firstName} ${user.lastName}`}
-          >
-            {`${user.firstName} ${user.lastName}`}
-            {user.email}
-          </User>
+          <>
+            <input
+              type='file'
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+            <User
+              avatarProps={{
+                radius: "full",
+                size: "sm",
+                src: user.avatarUrl,
+                style: { cursor: "pointer" },
+                onClick: () => {
+                  fileInputRef.current?.click();
+                },
+              }}
+              classNames={{
+                description: "text-default-500",
+              }}
+              description={user.email}
+              name={`${user.firstName} ${user.lastName}`}
+            >
+              {`${user.firstName} ${user.lastName}`}
+              {user.email}
+            </User>
+          </>
         );
       case "role":
         return (
@@ -182,13 +209,21 @@ const ManageUsers = () => {
         return (
           <div className='relative flex justify-start items-center gap-1'>
             {user.isAdmin ? (
-              <Tooltip color='success' className="text-white" content='Dismiss as admin'>
+              <Tooltip
+                color='success'
+                className='text-white'
+                content='Dismiss as admin'
+              >
                 <span className='text-lg cursor-pointer active:opacity-50 mr-1 mt-[2px]'>
                   <ArrowDownIcon onClick={() => handleDemoteUser(user.id)} />
                 </span>
               </Tooltip>
             ) : (
-              <Tooltip color='success' className="text-white" content='Promote as admin'>
+              <Tooltip
+                color='success'
+                className='text-white'
+                content='Promote as admin'
+              >
                 <span className='text-lg cursor-pointer active:opacity-50 mt-2'>
                   <ArrowUpIcon onClick={() => handlePromoteUser(user.id)} />
                 </span>
@@ -221,98 +256,6 @@ const ManageUsers = () => {
     }
   }, []);
 
-  const onSearchChange = React.useCallback((value?: string) => {
-    if (value) {
-      setFilterValue(value);
-      setPage(1);
-    } else {
-      setFilterValue("");
-    }
-  }, []);
-
-  const topContent = React.useMemo(() => {
-    return (
-      <div className='flex flex-col-reverse gap-4 mt-4 max-w-[980px]  mx-auto w-full'>
-        <div className='flex justify-between gap-3 items-end'>
-          <Input
-            isClearable
-            classNames={{
-              base: "w-full sm:max-w-[44%]",
-              inputWrapper: "border-1",
-            }}
-            placeholder='Search by name...'
-            size='sm'
-            startContent={<SearchIcon className='text-default-300' />}
-            value={filterValue}
-            variant='bordered'
-            onClear={() => setFilterValue("")}
-            onValueChange={onSearchChange}
-          />
-          <div className='flex gap-3'>
-            <Dropdown>
-              <DropdownTrigger className='hidden sm:flex'>
-                <Button
-                  endContent={<ChevronDownIcon className='text-small' />}
-                  size='sm'
-                  variant='flat'
-                >
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label='Table Columns'
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode='multiple'
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className='capitalize'>
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Dropdown>
-              <DropdownTrigger className='hidden sm:flex'>
-                <Button
-                  endContent={<ChevronDownIcon className='text-small' />}
-                  size='sm'
-                  variant='flat'
-                >
-                  Columns
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label='Table Columns'
-                closeOnSelect={false}
-                selectedKeys={visibleColumns}
-                selectionMode='multiple'
-                onSelectionChange={setVisibleColumns}
-              >
-                {columns.map((column) => (
-                  <DropdownItem key={column.uid} className='capitalize'>
-                    {capitalize(column.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        </div>
-        <div className='flex justify-between items-center'></div>
-      </div>
-    );
-  }, [
-    filterValue,
-    statusFilter,
-    visibleColumns,
-    onSearchChange,
-    users ? users.length : 0,
-    hasSearchFilter,
-  ]);
-
   const bottomContent = React.useMemo(() => {
     return (
       <div className='py-2 px-2 flex  justify-evenly items-center'>
@@ -328,11 +271,6 @@ const ManageUsers = () => {
           variant='light'
           onChange={setPage}
         />
-        {/* <span className='text-small text-default-400'>
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${items.length} selected`}
-        </span> */}
         <span className='text-default-400 text-small'>
           Total {users && users.length} users
         </span>
@@ -342,16 +280,12 @@ const ManageUsers = () => {
 
   const classNames = React.useMemo(
     () => ({
-      wrapper: ["max-h-[550px]", "max-w-[980px]", "mx-auto"],
+      wrapper: ["max-h-[550px]", "max-w-[980px]", "mx-auto", "mt-12"],
       th: ["bg-transparent", "text-default-500", "border-b", "border-divider"],
       td: [
-        // changing the rows border radius
-        // first
         "group-data-[first=true]:first:before:rounded-none",
         "group-data-[first=true]:last:before:rounded-none",
-        // middle
         "group-data-[middle=true]:before:rounded-none",
-        // last
         "group-data-[last=true]:first:before:rounded-none",
         "group-data-[last=true]:last:before:rounded-none",
       ],
@@ -480,9 +414,7 @@ const ManageUsers = () => {
         classNames={classNames}
         selectedKeys={selectedKeys}
         selectionMode='multiple'
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement='outside'
+        sortDescriptor={sortDescriptor}       
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
       >

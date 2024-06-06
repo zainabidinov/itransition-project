@@ -104,9 +104,9 @@ const LogIn: React.FC = () => {
             LOGIN
           </Button>
 
-          <span className='text-center '>
-            Don't have an account yet?{" "}
-            <Link to='/signup' className='hover:underline'>
+          <span className='text-center'>
+            Don't have an account yet?
+            <Link to='/signup' className='hover:underline ml-1'>
               Sign Up
             </Link>
           </span>

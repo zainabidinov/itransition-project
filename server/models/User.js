@@ -32,6 +32,10 @@ const User = sequelize.define("user", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  avatarUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 module.exports = User;

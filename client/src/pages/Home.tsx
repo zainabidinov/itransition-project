@@ -15,7 +15,6 @@ const Home = () => {
           const response = await axiosInstance.get("/current-user");
           if (response.data.success) {
             setCurrentUser(response.data.user);
-            console.log(currentUser);
           }
         }
       } catch (error) {

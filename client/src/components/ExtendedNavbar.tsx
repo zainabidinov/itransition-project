@@ -19,7 +19,7 @@ import { useEffect } from "react";
 import axiosInstance from "../api/axiosInstance";
 
 const ExtendedNavbar: React.FC = () => {
-  const { currentUser, setCurrentUser} = useUserContext();
+  const { currentUser, setCurrentUser } = useUserContext();
   const navigate = useNavigate();
 
   const handleLogOut = () => {
@@ -28,7 +28,6 @@ const ExtendedNavbar: React.FC = () => {
     setCurrentUser(null);
   };
 
-  
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -36,7 +35,6 @@ const ExtendedNavbar: React.FC = () => {
           const response = await axiosInstance.get("/current-user");
           if (response.data.success) {
             setCurrentUser(response.data.user);
-            console.log(currentUser);
           }
         }
       } catch (error) {
@@ -47,14 +45,16 @@ const ExtendedNavbar: React.FC = () => {
     fetchCurrentUser();
   }, []);
 
-
   const renderNavbarItems = () => {
     if (currentUser && currentUser.isAdmin === false) {
       return (
         <Navbar isBordered>
           <NavbarContent justify='start'>
             <NavbarBrand>
-              <p className='hidden sm:block font-bold text-xl text-inherit'>
+              <p
+                className='hidden sm:block font-bold text-xl text-inherit'
+                onClick={() => navigate("/home")}
+              >
                 COLLECTR.
               </p>
             </NavbarBrand>
@@ -78,17 +78,31 @@ const ExtendedNavbar: React.FC = () => {
 
           <NavbarContent as='div' justify='end'>
             <NavbarItem>
-              <Link color='foreground' href='#' className='hover:underline hover:cursor-pointer'>
+              <Link
+                color='foreground'
+                href='#'
+                className='hover:underline hover:cursor-pointer'
+                onClick={() => navigate("/home")}
+              >
                 HOME
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link href='#' color='foreground' className='hover:underline hover:cursor-pointer'>
+              <Link
+                href='#'
+                color='foreground'
+                className='hover:underline hover:cursor-pointer'
+                onClick={() => navigate("/collections")}
+              >
                 COLLECTIONS
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link href='#' color='foreground' className='hover:underline hover:cursor-pointer'>
+              <Link
+                href='#'
+                color='foreground'
+                className='hover:underline hover:cursor-pointer'
+              >
                 ABOUT
               </Link>
             </NavbarItem>
@@ -102,7 +116,7 @@ const ExtendedNavbar: React.FC = () => {
                     color='secondary'
                     name='Jason Hughes'
                     size='sm'
-                    src='https://i.pravatar.cc/150?u=a042581f4e29026704d'
+                    src={currentUser.avatarUrl}
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label='Profile Actions' variant='flat'>
@@ -110,7 +124,13 @@ const ExtendedNavbar: React.FC = () => {
                     <p className='font-semibold'>Signed in as</p>
                     <p className='font-semibold'>{currentUser.email}</p>
                   </DropdownItem>
-                  <DropdownItem key='collections'>My Collections</DropdownItem>
+
+                  <DropdownItem
+                    key='collections'
+                    onClick={() => navigate(`/my-collections/${currentUser.id}`)}
+                  >
+                    My Collections
+                  </DropdownItem>
                   <DropdownItem key='about'>About</DropdownItem>
                   <DropdownItem
                     key='logout'
@@ -130,7 +150,10 @@ const ExtendedNavbar: React.FC = () => {
         <Navbar isBordered>
           <NavbarContent justify='start'>
             <NavbarBrand>
-              <p className='hidden sm:block font-bold text-xl text-inherit'>
+              <p
+                className='hidden sm:block font-bold text-xl text-inherit'
+                onClick={() => navigate("/home")}
+              >
                 COLLECTR.
               </p>
             </NavbarBrand>
@@ -154,18 +177,25 @@ const ExtendedNavbar: React.FC = () => {
 
           <NavbarContent as='div' justify='end'>
             <NavbarItem>
-              <Link color='foreground'  className='hover:underline hover:cursor-pointer' onClick={() => navigate("/home")}>
+              <Link
+                color='foreground'
+                className='hover:underline hover:cursor-pointer'
+                onClick={() => navigate("/home")}
+              >
                 HOME
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link  color='foreground' className='hover:underline hover:cursor-pointer'>
+              <Link
+                color='foreground'
+                className='hover:underline hover:cursor-pointer'
+                onClick={() => navigate("/collections")}
+              >
                 COLLECTIONS
               </Link>
             </NavbarItem>
             <NavbarItem>
               <Link
-                
                 color='foreground'
                 className='hover:underline hover:cursor-pointer'
                 onClick={() => navigate("/users")}
@@ -183,7 +213,7 @@ const ExtendedNavbar: React.FC = () => {
                     color='secondary'
                     name='Jason Hughes'
                     size='sm'
-                    src='https://i.pravatar.cc/150?u=a042581f4e29026704d'
+                    src={currentUser.avatarUrl}
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label='Profile Actions' variant='flat'>
@@ -191,13 +221,19 @@ const ExtendedNavbar: React.FC = () => {
                     <p className='font-semibold'>Signed in as</p>
                     <p className='font-semibold'>{currentUser.email}</p>
                   </DropdownItem>
+
                   <DropdownItem
                     key='settings'
                     onClick={() => navigate("/users")}
                   >
                     Manage Users
                   </DropdownItem>
-                  <DropdownItem key='collections'>Collections</DropdownItem>
+                  <DropdownItem
+                    key='collections'
+                    onClick={() => navigate(`/my-collections/${currentUser.id}`)}
+                  >
+                    My Collections
+                  </DropdownItem>
                   <DropdownItem
                     key='logout'
                     color='danger'
@@ -216,7 +252,10 @@ const ExtendedNavbar: React.FC = () => {
         <Navbar isBordered>
           <NavbarContent justify='start'>
             <NavbarBrand>
-              <p className='hidden sm:block font-bold text-xl text-inherit'>
+              <p
+                className='hidden sm:block font-bold text-xl text-inherit'
+                onClick={() => navigate("/home")}
+              >
                 COLLECTR.
               </p>
             </NavbarBrand>
@@ -240,17 +279,28 @@ const ExtendedNavbar: React.FC = () => {
 
           <NavbarContent as='div' justify='end'>
             <NavbarItem>
-              <Link color='foreground' className='hover:underline hover:cursor-pointer' onClick={() => navigate("/home")}>
+              <Link
+                color='foreground'
+                className='hover:underline hover:cursor-pointer'
+                onClick={() => navigate("/home")}
+              >
                 HOME
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link color='foreground' className='hover:underline hover:cursor-pointer' onClick={() => navigate("/collections")}>
+              <Link
+                color='foreground'
+                className='hover:underline hover:cursor-pointer'
+                onClick={() => navigate("/collections")}
+              >
                 COLLECTIONS
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link color='foreground' className='hover:underline hover:cursor-pointer'>
+              <Link
+                color='foreground'
+                className='hover:underline hover:cursor-pointer'
+              >
                 ABOUT
               </Link>
             </NavbarItem>
