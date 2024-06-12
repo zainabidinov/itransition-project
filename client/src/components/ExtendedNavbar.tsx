@@ -52,8 +52,8 @@ const ExtendedNavbar: React.FC = () => {
           <NavbarContent justify='start'>
             <NavbarBrand>
               <p
-                className='hidden sm:block font-bold text-xl text-inherit'
-                onClick={() => navigate("/home")}
+                className='hidden sm:block font-bold text-xl text-inherit hover:cursor-pointer'
+                onClick={() => navigate("/collections")}
               >
                 COLLECTR.
               </p>
@@ -81,16 +81,6 @@ const ExtendedNavbar: React.FC = () => {
               <Link
                 color='foreground'
                 href='#'
-                className='hover:underline hover:cursor-pointer'
-                onClick={() => navigate("/home")}
-              >
-                HOME
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link
-                href='#'
-                color='foreground'
                 className='hover:underline hover:cursor-pointer'
                 onClick={() => navigate("/collections")}
               >
@@ -127,7 +117,9 @@ const ExtendedNavbar: React.FC = () => {
 
                   <DropdownItem
                     key='collections'
-                    onClick={() => navigate(`/my-collections/${currentUser.id}`)}
+                    onClick={() =>
+                      navigate(`/my-collections/${currentUser.id}`)
+                    }
                   >
                     My Collections
                   </DropdownItem>
@@ -151,8 +143,8 @@ const ExtendedNavbar: React.FC = () => {
           <NavbarContent justify='start'>
             <NavbarBrand>
               <p
-                className='hidden sm:block font-bold text-xl text-inherit'
-                onClick={() => navigate("/home")}
+                className='hidden sm:block font-bold text-xl text-inherit hover:cursor-pointer'
+                onClick={() => navigate("/collections")}
               >
                 COLLECTR.
               </p>
@@ -176,15 +168,6 @@ const ExtendedNavbar: React.FC = () => {
           </NavbarContent>
 
           <NavbarContent as='div' justify='end'>
-            <NavbarItem>
-              <Link
-                color='foreground'
-                className='hover:underline hover:cursor-pointer'
-                onClick={() => navigate("/home")}
-              >
-                HOME
-              </Link>
-            </NavbarItem>
             <NavbarItem>
               <Link
                 color='foreground'
@@ -230,7 +213,9 @@ const ExtendedNavbar: React.FC = () => {
                   </DropdownItem>
                   <DropdownItem
                     key='collections'
-                    onClick={() => navigate(`/my-collections/${currentUser.id}`)}
+                    onClick={() =>
+                      navigate(`/my-collections/${currentUser.id}`)
+                    }
                   >
                     My Collections
                   </DropdownItem>
@@ -253,8 +238,8 @@ const ExtendedNavbar: React.FC = () => {
           <NavbarContent justify='start'>
             <NavbarBrand>
               <p
-                className='hidden sm:block font-bold text-xl text-inherit'
-                onClick={() => navigate("/home")}
+                className='hidden sm:block font-bold text-xl text-inherit hover:cursor-pointer'
+                onClick={() => navigate("/collections")}
               >
                 COLLECTR.
               </p>
@@ -278,15 +263,6 @@ const ExtendedNavbar: React.FC = () => {
           </NavbarContent>
 
           <NavbarContent as='div' justify='end'>
-            <NavbarItem>
-              <Link
-                color='foreground'
-                className='hover:underline hover:cursor-pointer'
-                onClick={() => navigate("/home")}
-              >
-                HOME
-              </Link>
-            </NavbarItem>
             <NavbarItem>
               <Link
                 color='foreground'

@@ -43,7 +43,7 @@ const SignUp: React.FC = () => {
         }
         if (response.success === true) {
           localStorage.setItem('token', response.token);
-          navigate("/home");
+          navigate("/collections");
           formik.resetForm();
         }
       } catch (error) {

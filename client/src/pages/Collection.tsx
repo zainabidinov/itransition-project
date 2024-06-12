@@ -26,6 +26,7 @@ import {
   Input,
 } from "@nextui-org/react";
 import { itemTags } from "../data/itemTags";
+import axios from "axios";
 
 const Collection = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -101,8 +102,8 @@ const Collection = () => {
   useEffect(() => {
     const fetchUserItems = async () => {
       try {
-        const response = await axiosInstance.get(
-          `fetch-items/${params.collectionId}`
+        const response = await axios.get(
+          `https://itransition-project-api.onrender.com/api/fetch-items/${params.collectionId}`
         );
         if (response.data.success) {
           setUserItems((prevItems) => response.data.data);

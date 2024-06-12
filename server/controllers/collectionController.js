@@ -76,3 +76,28 @@ exports.getCollectionById = async (req, res) => {
       .json({ error: "An error occurred while fetching collections." });
   }
 };
+
+exports.getCollections = async (req, res) => {
+  try {
+    const collections = await Collection.findAll({
+      attributes: [
+        "id",
+        "title",
+        "category",
+        "description",
+        "imageUrl",
+        "userId",
+      ],
+    });
+
+    return res.status(200).send({
+      message: "Collections fetched successfully.",
+      success: true,
+      collections,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching collections." });
+  }
+};

@@ -1,10 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
-import Home from "./pages/Home";
 import { UserProvider } from "./store/userContext";
 import ManageUsers from "./pages/ManageUsers";
-import Collections from "./pages/Collections";
+import Collections from "./pages/Collections"
 import MyCollections from "./pages/MyCollections";
 import Collection from "./pages/Collection";
 function App() {
@@ -12,8 +11,8 @@ function App() {
     <UserProvider>
       <div className="w-screen h-screen">
         <Routes>
-          <Route path='/' element={<Navigate to='/home' />} />
-          <Route path='/home' element={<Home />} />
+          <Route path='/' element={<Navigate to='/collections' />} />
+          <Route path='/collections' element={<Collections />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/login' element={<LogIn />} />
           <Route path='/users' element={<ManageUsers />} />

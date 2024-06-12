@@ -4,7 +4,7 @@ const itemController = require("../controllers/itemController");
 const authenticateToken = require("../middleware/authenticateToken");
 
 
-router.get("/fetch-items/:collectionId", authenticateToken, itemController.getItemsByCollection);
+router.get("/fetch-items/:collectionId", itemController.getItemsByCollection);
 router.post("/create-item/:collectionId", authenticateToken, itemController.createItem);
 
 module.exports = router;

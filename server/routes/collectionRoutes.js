@@ -9,5 +9,6 @@ router.get("/my-collections/:userId", authenticateToken, collectionController.ge
 router.post("/create-collection/:userId",  authenticateToken, collectionController.createCollection);
 router.post("/upload-collection-image/:collectionId",  authenticateToken, upload.single("image"), collectionController.uploadCollectionImage);  
 router.get("/collection/:collectionId", authenticateToken, collectionController.getCollectionById);
+router.get("/fetch-collections",  collectionController.getCollections);
 
 module.exports = router;
